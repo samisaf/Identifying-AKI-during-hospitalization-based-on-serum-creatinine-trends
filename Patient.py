@@ -69,9 +69,16 @@ class Patient(object):
         return self.__str__()
     
     def __calcBaseCr__(self):
-        self.minCr = np.min(self.crsBeforeAdmission) # calculate the minimum creatinine ever        
-        self.cr25 = np.percentile(self.crsBeforeAdmission, 25) # calculate the 25% creatinine
-        return MEASUREFUNC(self.crsBeforeAdmission)
+        try: self.minCr = np.min(self.crsBeforeAdmission) # calculate the minimum creatinine ever      
+        except: self.minCr = np.NaN
+        
+        try: self.cr25 = np.percentile(self.crsBeforeAdmission, 25) # calculate the 25% creatinine
+        except: self.cr25 = np.NaN
+        
+        try: self.baseCr = MEASUREFUNC(self.crsBeforeAdmission)
+        except: self.baseCr = np.NaN
+        
+        return self.baseCr
     
     def __calcPeakCr__(self):
         return np.max(self.crsDuringAdmission)
